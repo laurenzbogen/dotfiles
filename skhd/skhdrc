@@ -1,0 +1,66 @@
+# -- Changing Window Focus --
+
+:: yabai_view @
+ctrl - m ; yabai_view
+yabai_view < escape ; default
+
+:: yabai_move @
+ctrl + shift - m ; yabai_move
+yabai_move < escape ; default
+
+# maximize a window
+yabai_move < f : yabai -m window --toggle zoom-fullscreen ; skhd -k "escape"
+# balance out tree of windows (resize to occupy same area) 
+yabai_view < 0x18 : yabai -m space --balance
+
+
+yabai_view < h : yabai -m window --focus west ; skhd -k "escape"
+yabai_view < l : yabai -m window --focus east ; skhd -k "escape"
+yabai_view < k : yabai -m window --focus north ; skhd -k "escape"
+yabai_view < j : yabai -m window --focus south ; skhd -k "escape"
+
+# move window to space #
+yabai_move < 1 : yabai -m window --space 1 ; skhd -k "escape"
+yabai_move < 2 : yabai -m window --space 2 ; skhd -k "escape"
+yabai_move < 3 : yabai -m window --space 3 ; skhd -k "escape"
+yabai_move < 4 : yabai -m window --space 4 ; skhd -k "escape"
+yabai_move < 5 : yabai -m window --space 5 ; skhd -k "escape"
+yabai_move < 6 : yabai -m window --space 6 ; skhd -k "escape"
+yabai_move < 7 : yabai -m window --space 7 ; skhd -k "escape"
+yabai_move < 8 : yabai -m window --space 8 ; skhd -k "escape"
+yabai_move < 9 : yabai -m window --space 9 ; skhd -k "escape"
+
+yabai_move < d : yabai -m window --toggle float ; skhd -k "escape"
+
+# Toggle between display 1 and 2
+yabai_view < space : if [ "$(yabai -m query --displays --display | jq -r '.index')" = "1" ]; then yabai -m display --focus 2; else yabai -m display --focus 1; fi ; skhd -k "escape"
+
+# Toggle moving windows between displays
+yabai_move < 0 : if [ "$(yabai -m query --displays --display | jq -r '.index')" = "1" ]; then yabai -m window --display 2; else yabai -m window --display 1; fi ; skhd -k "escape"
+
+# Toggle moving windows between displays and follow
+yabai_move < space : if [ "$(yabai -m query --windows --display | jq '.[0].display')" = "1" ]; then yabai -m window --display 2 && yabai -m display --focus 2; else yabai -m window --display 1 && yabai -m display --focus 1; fi ; skhd -k "escape"
+
+
+# defines a new mode 'resize' with an on_enter command, that captures keypresses
+:: resize @ : yabai -m config active_window_opacity 1; yabai -m config normal_window_opacity 0.5;
+yabai_view < r ; resize 
+resize < escape ; default
+
+# equalize windows
+resize < 0x18 : yabai -m space --balance
+
+
+# increase window size
+resize < h : yabai -m window --resize right:-20:0 2> /dev/null || yabai -m window --resize left:-20:0 2> /dev/null
+resize < j : yabai -m window --resize bottom:0:20 2> /dev/null || yabai -m window --resize top:0:20 2> /dev/null
+resize < k : yabai -m window --resize bottom:0:-20 2> /dev/null || yabai -m window --resize top:0:-20 2> /dev/null
+resize < l : yabai -m window --resize right:20:0 2> /dev/null || yabai -m window --resize left:20:0 2> /dev/null
+
+
+
+
+# -- Starting/Stopping/Restarting Yabai --
+yabai_view < q : yabai --stop-service  ; skhd -k "escape"
+yabai_view < s : yabai --start-service  ; skhd -k "escape"
+yabai_view < ctrl - s : yabai --restart-service ; skhd -k "escape"

@@ -1,0 +1,13 @@
+.DS_Store
+.prettierrc
+Roland\ Cloud/
+configstore/
+firebase/
+ghc/
+github-copilot/
+instaloader/
+iterm2/
+menus/
+ncspot/
+qBittorrent/
+raycast/
